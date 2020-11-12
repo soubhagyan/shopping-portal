@@ -2,6 +2,12 @@ pipeline {
   agent any
   stages {
     stage('build') {
+      agent {
+        docker {
+          image 'lagairogo/node'
+        }
+
+      }
       steps {
         echo 'this is the first job'
         sh 'npm install'
@@ -9,22 +15,49 @@ pipeline {
     }
 
     stage('test') {
+      agent {
+        docker {
+          image 'lagairogo/node'
+        }
+
+      }
       steps {
         echo 'this is the second job'
-        sh 'npm test'
+        sh '''npm install
+npm test'''
       }
     }
 
     stage('package') {
+      agent {
+        docker {
+          image 'lagairogo/node'
+        }
+
+      }
       steps {
         echo 'this is the third job'
-        sh 'npm rum package'
+        sh '''npm install
+npm rum package'''
       }
     }
 
     stage('Archive') {
       steps {
         archiveArtifacts '**/distribution/*.zip'
+      }
+    }
+
+    stage('Build and Publish') {
+      steps {
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+            def dockerImage = docker.build("soubhagysn/shopping-portal:v${env.BUILD_ID}", "./")
+            dockerImage.push()
+            dockerImage.push("latest")
+          }
+        }
+
       }
     }
 
