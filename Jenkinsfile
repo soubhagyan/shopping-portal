@@ -38,13 +38,7 @@ npm test'''
       steps {
         echo 'this is the third job'
         sh '''npm install
-npm rum package'''
-      }
-    }
-
-    stage('Archive') {
-      steps {
-        archiveArtifacts '**/distribution/*.zip'
+npm run package'''
       }
     }
 
