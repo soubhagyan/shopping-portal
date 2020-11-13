@@ -46,7 +46,7 @@ npm run package'''
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
-            def dockerImage = docker.build("soubhagysn/shopping-portal:v${env.BUILD_ID}", "./")
+            def dockerImage = docker.build("soubhagyan/shopping-portal:v${env.BUILD_ID}", "./")
             dockerImage.push()
             dockerImage.push("latest")
           }
